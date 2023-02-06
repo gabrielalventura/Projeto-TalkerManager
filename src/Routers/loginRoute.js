@@ -9,10 +9,10 @@ function getToken() {
 }
 
 router.post('/', async (req, res) => {
-  const useToken = getToken();
+  const token = getToken();
   // const { email, password } = req.body;
 
-  return res.status(200).json({ useToken });
+  return res.status(200).json({ token });
 });
 
 module.exports = router;

@@ -1,6 +1,12 @@
 const express = require('express');
 const fs = require('fs/promises');
 const path = require('path');
+const validateToken = require('../middleware/validateToken');
+const validateName = require('../middleware/validateName');
+const validateAge = require('../middleware/validateAge');
+const validateTalk = require('../middleware/validateTalk');
+const validateWatchedAt = require('../middleware/validateWatchedAt');
+const validateRate = require('../middleware/validateRate');
 
 const readDB = path.resolve(__dirname, '..', 'talker.json');
 
@@ -31,5 +37,10 @@ router.get('/:id', async (req, res) => {
   }
   return res.status(200).json(talker);
 });
+
+// router.post('/', validateToken, validateName, 
+// validateAge, validateTalk, validateWatchedAt, validateRate, async (req, res) => {
+//   res.status(201).json();
+// });
 
 module.exports = router;

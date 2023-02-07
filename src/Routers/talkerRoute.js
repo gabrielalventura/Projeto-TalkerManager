@@ -8,7 +8,7 @@ const validateTalk = require('../middleware/validateTalk');
 const validateWatchedAt = require('../middleware/validateWatchedAt');
 const validateRate = require('../middleware/validateRate');
 
-const readDB = path.resolve(__dirname, '..', 'talker.json');
+const readDB = path.join(__dirname, '../talker.json');
 
 const router = express.Router();
 
@@ -18,11 +18,11 @@ const DB = async () => {
 };
 
 const insertDB = async (talkers) => {
-  const addTalkers = await fs.writeFile(readDB, JSON.stringify(talkers), 'utf-8');
+  const addTalkers = await fs.writeFile(readDB, JSON.stringify(talkers));
   return addTalkers;
 };
 
-router.get('/', async (req, res) => {
+router.get('/', async (_req, res) => {
   const getTalkers = await DB();
   if (getTalkers.lenght === 0) {
     return res.status(200).send([]);
@@ -45,14 +45,14 @@ router.get('/:id', async (req, res) => {
 
 router.post('/', validateToken, validateName, 
 validateAge, validateTalk, validateWatchedAt, validateRate, async (req, res) => {
-  const newBody = { ...req.body };
   const talkers = await DB();
-  const theId = talkers.lenght - 1;
-  newBody.id = theId + 1;
-  const allTalkers = [...talkers, newBody];
-  await insertDB(allTalkers);
+  const theId = talkers.length;
+  const newInfo = { id: theId + 1, ...req.body };
+  // console.log(newInfo);
+  talkers.push(newInfo);
+  await insertDB(talkers);
 
-  res.status(201).json(newBody);
+  return res.status(201).json(newInfo);
 });
 
 module.exports = router;

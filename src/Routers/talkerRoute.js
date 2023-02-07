@@ -24,7 +24,7 @@ const insertDB = async (talkers) => {
 
 router.get('/', async (_req, res) => {
   const getTalkers = await DB();
-  if (getTalkers.lenght === 0) {
+  if (getTalkers.length === 0) {
     return res.status(200).send([]);
   } 
     res.status(200).send(getTalkers);
@@ -53,6 +53,20 @@ validateAge, validateTalk, validateWatchedAt, validateRate, async (req, res) => 
   await insertDB(talkers);
 
   return res.status(201).json(newInfo);
+});
+
+router.put('/:id', validateToken, validateName, 
+validateAge, validateTalk, validateWatchedAt, validateRate, async (req, res) => {
+  const choosedId = Number(req.params.id);
+  const specificTalker = req.body;
+  const talkers = await DB();
+  const notEdit = talkers.filter((t) => t.id !== choosedId);
+  const edited = { id: choosedId, ...specificTalker };
+  const newTalkersList = [...notEdit, edited];
+  await insertDB(newTalkersList);
+  console.log(edited);
+
+  return res.status(200).json(edited);
 });
 
 module.exports = router;

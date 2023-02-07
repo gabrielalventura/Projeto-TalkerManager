@@ -64,9 +64,18 @@ validateAge, validateTalk, validateWatchedAt, validateRate, async (req, res) => 
   const edited = { id: choosedId, ...specificTalker };
   const newTalkersList = [...notEdit, edited];
   await insertDB(newTalkersList);
-  console.log(edited);
+  // console.log(edited);
 
   return res.status(200).json(edited);
+});
+
+router.delete('/:id', validateToken, async (req, res) => {
+  const choosedId = Number(req.params.id);
+  const talkers = await DB();
+  const notDeleted = talkers.filter((t) => t.id !== choosedId);
+  await insertDB(notDeleted);
+
+  return res.status(204).send();
 });
 
 module.exports = router;

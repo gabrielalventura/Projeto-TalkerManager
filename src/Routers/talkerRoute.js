@@ -8,7 +8,7 @@ const validateTalk = require('../middleware/validateTalk');
 const validateWatchedAt = require('../middleware/validateWatchedAt');
 const validateRate = require('../middleware/validateRate');
 
-const readDB = path.resolve(__dirname, '../talker.json');
+const readDB = path.resolve(__dirname, '..', 'talker.json');
 
 const router = express.Router();
 

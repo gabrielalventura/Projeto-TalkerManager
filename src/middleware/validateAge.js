@@ -5,7 +5,7 @@ const validateAge = (req, res, next) => {
     return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
   if (typeof age !== 'number') {
-    return res.status(400).json({ message: 'O campo "age" deve ser do tipo "number' });
+    return res.status(400).json({ message: 'O campo "age" deve ser do tipo "number"' });
   }
   if (!Number.isInteger(age)) {
     return res.status(400).json({ message: 'O campo "age" deve ser um "number" do tipo inteiro' });

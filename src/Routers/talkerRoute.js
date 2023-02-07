@@ -17,6 +17,11 @@ const DB = async () => {
   return JSON.parse(talkers);
 };
 
+const insertDB = async (talkers) => {
+  const addTalkers = await fs.writeFile(readDB, JSON.stringify(talkers), 'utf-8');
+  return addTalkers;
+};
+
 router.get('/', async (req, res) => {
   const getTalkers = await DB();
   if (getTalkers.lenght === 0) {
@@ -38,9 +43,16 @@ router.get('/:id', async (req, res) => {
   return res.status(200).json(talker);
 });
 
-// router.post('/', validateToken, validateName, 
-// validateAge, validateTalk, validateWatchedAt, validateRate, async (req, res) => {
-//   res.status(201).json();
-// });
+router.post('/', validateToken, validateName, 
+validateAge, validateTalk, validateWatchedAt, validateRate, async (req, res) => {
+  const newBody = { ...req.body };
+  const talkers = await DB();
+  const theId = talkers.lenght - 1;
+  newBody.id = theId + 1;
+  const allTalkers = [...talkers, newBody];
+  await insertDB(allTalkers);
+
+  res.status(201).json(newBody);
+});
 
 module.exports = router;

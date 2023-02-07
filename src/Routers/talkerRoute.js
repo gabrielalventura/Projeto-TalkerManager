@@ -8,7 +8,7 @@ const validateTalk = require('../middleware/validateTalk');
 const validateWatchedAt = require('../middleware/validateWatchedAt');
 const validateRate = require('../middleware/validateRate');
 
-const readDB = path.join(__dirname, '../talker.json');
+const readDB = path.resolve(__dirname, '../talker.json');
 
 const router = express.Router();
 
@@ -21,6 +21,23 @@ const insertDB = async (talkers) => {
   const addTalkers = await fs.writeFile(readDB, JSON.stringify(talkers));
   return addTalkers;
 };
+
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await DB();
+  
+  if (!q) {
+    return res.status(200).json(talkers);
+  }
+
+  const searchResults = talkers.filter((t) => t.name.includes(q));
+
+  if (searchResults.length === 0) {
+    return res.status(200).send([]);
+  }
+
+  return res.status(200).json(searchResults);
+});
 
 router.get('/', async (_req, res) => {
   const getTalkers = await DB();
